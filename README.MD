@@ -48,10 +48,10 @@ go build -o bin/replicant main/main.go
 ```
 ./bin/replicant -id 0 -c config/leader_config.json [-d]
 ```
-2. Run other replicants with the follower_config file (NOTE: ensure that the leader node is already running before starting followers). Note: the `-j` flag should be added for "joining" state as well as `-l` flag for current leader address (in <IP>:<PORT> format)
+2. Run other replicants with the follower_config file (NOTE: ensure that the leader node is already running before starting followers). Note: the `-j` flag should be added for "joining" state as well as `-l` flag for current leader address (in <IP>:<PORT> format (eg: if leader starts at port 10000 as mentioned in config file, the follower should connect to 10001 port)). Optionally run with `-d` flag for debug logs.
 ```
-./bin/replicant -id 1 -c config/follower_config.json -j -l <LEADER-IP>:<LEADER-PORT> [-d]
-./bin/replicant -id 2 -c config/follower_config.json -j -l <LEADER-IP>:<LEADER-PORT> [-d]
+./bin/replicant -id 1 -c config/follower_config.json -j -l <LEADER-IP>:<LEADER-PORT+1> [-d]
+./bin/replicant -id 2 -c config/follower_config.json -j -l <LEADER-IP>:<LEADER-PORT+1> [-d]
 ```
 3. Current follower_config files support for 3 nodes, can be modified for more nodes as needed.
 4. Refer the (holipaxos-client)[] repository for running ycsb client against the running replicants.
