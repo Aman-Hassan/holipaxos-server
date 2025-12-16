@@ -7,7 +7,7 @@ import (
 )
 
 const (
-	NotFound string = "key not found"
+	NotFound string = "0"
 	Empty           = ""
 )
 
@@ -26,9 +26,10 @@ type KVStore interface {
 }
 
 func CreateStore(config config.Config) KVStore {
-	if config.Store == "rocksdb" {
-		return NewRocksDBKVStore(config.DbPath)
-	} else if config.Store == "mem" {
+	// if config.Store == "rocksdb" {
+	// 	return NewRocksDBKVStore(config.DbPath)
+	// } else 
+	if config.Store == "mem" {
 		return NewMemKVStore()
 	} else {
 		logger.Panic("no match kvstore")

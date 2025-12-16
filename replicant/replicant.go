@@ -106,7 +106,10 @@ func (r *Replicant) executorThread() {
 			id, result := r.log.Execute(instance)
 			client := r.clientManager.Get(id)
 			if client != nil {
-				client.Write(result.Value)
+				//^ Current format: "value index ballot" -> minimal change
+				//^ Could possibly make this json string with more details (needs additional libraries)
+				hint_response := result.Value + " " + strconv.FormatInt(instance.Index, 10) + " " + strconv.FormatInt(instance.Ballot, 10) 
+				client.Write(hint_response)
 			} else if instance.ClientId == -1 {
 				values := strings.Split(instance.Command.Value, " ")
 				posVarSum, _ := strconv.ParseFloat(values[0], 64)
