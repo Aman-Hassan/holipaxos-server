@@ -54,7 +54,7 @@ go build -o bin/replicant main/main.go
 ./bin/replicant -id 2 -c config/follower_config.json -j -l <LEADER-IP>:<LEADER-PORT+1> [-d]
 ```
 3. Current follower_config files support for 3 nodes, can be modified for more nodes as needed.
-4. Refer the (holipaxos-client)[] repository for running ycsb client against the running replicants.
+4. Refer the [holipaxos-client](https://github.com/Aman-Hassan/holipaxos-client.git) repository for running ycsb client against the running replicants.
 
 ## Pending
 - Fix rocksdb integration
