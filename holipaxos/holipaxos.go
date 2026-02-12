@@ -278,6 +278,7 @@ func (p *Multipaxos) StopCommitThread() {
 
 func (p *Multipaxos) Replicate(command *pb.Command, clientId int64) Result {
 	ballot := p.Ballot()
+	logger.Infof("DEBUG [holipaxos.go Replicate()]: Client %v sent command %v to server %v with ballot %v", clientId, command, p.id, ballot)
 	if IsLeader(ballot, p.id) {
 		return p.RunAcceptPhase(ballot, p.log.AdvanceLastIndex(), command,
 			clientId)
@@ -471,6 +472,7 @@ func (p *Multipaxos) RunAcceptPhase(ballot int64, index int64,
 
 	if state.NumOks > numPeers/2 {
 		p.log.Commit(index)
+		logger.Infof("DEBUG [holipaxos.go RunAcceptPhase()] Committed instance index: %v, ballot: %v, command: %v at server %v", index, ballot, command, p.id)
 		return Result{Type: Ok, Leader: -1}
 	}
 	if !IsLeader(p.Ballot(), p.id) {

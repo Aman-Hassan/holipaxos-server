@@ -104,11 +104,13 @@ func (r *Replicant) executorThread() {
 			}
 		} else {
 			id, result := r.log.Execute(instance)
+			logger.Infof("DEBUG [replicant.go executorThread()]: Executed instance index: %v, ballot: %v, command: %v at server %v with result: %v", instance.Index, instance.Ballot, instance.Command, r.id, result)
 			client := r.clientManager.Get(id)
 			if client != nil {
 				//^ Current format: "value index ballot" -> minimal change
 				//^ Could possibly make this json string with more details (needs additional libraries)
 				hint_response := result.Value + " " + strconv.FormatInt(instance.Index, 10) + " " + strconv.FormatInt(instance.Ballot, 10) 
+				logger.Infof("DEBUG [replicant.go executorThread()]: Sending response to client %v: %v", id, hint_response)
 				client.Write(hint_response)
 			} else if instance.ClientId == -1 {
 				values := strings.Split(instance.Command.Value, " ")

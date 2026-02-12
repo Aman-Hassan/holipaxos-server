@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"github.com/psu-csl/replicated-store/go/holipaxos"
 	pb "github.com/psu-csl/replicated-store/go/holipaxos/comm"
+	logger "github.com/sirupsen/logrus"
 	"net"
 	"strconv"
 	"strings"
@@ -81,16 +82,19 @@ func (c *Client) Read() {
 
 		command := c.Parse(request)
 		if command != nil {
+			logger.Infof("DEBUG [client.go Read()]: Client %d sent %s", c.id, request)
 			result := c.multipaxos.Replicate(command, c.id)
 			if result.Type == holipaxos.Ok {
 				continue
 			}
 			if result.Type == holipaxos.Retry {
+				logger.Infof("DEBUG [client.go Read()]: Replication failed for client %d, asking client to retry command: %s", c.id, request)
 				c.Write("retry")
 			} else {
 				if result.Type != holipaxos.SomeElseLeader {
 					panic("Result is not someone_else_leader")
 				}
+				logger.Infof("DEBUG [client.go Read()]: Client %d sent command to non-leader, leader is %d", c.id, result.Leader)
 				c.Write("leader is " + strconv.FormatInt(result.Leader, 10))
 			}
 		} else {
